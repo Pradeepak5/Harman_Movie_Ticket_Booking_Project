@@ -50,7 +50,7 @@ def admin_login():
         print(getpassword)
         if getadminname == "admin" and getpassword == "12345":
             return redirect("/addtheatre")
-        return render_template("login.html")
+    return render_template("login.html")
 
 @admin.route("/addtheatre",methods=["POST","GET"])
 def add_theatre():
@@ -69,6 +69,64 @@ def add_theatre():
             print(e)
 
     return render_template("add_theatre.html")
+
+@admin.route("/deletetheatre",methods = ["GET","POST"])
+def delete_theatre():
+    if request.method == "POST":
+        gettheatrename = request.form["theatrename"]
+        print(gettheatrename)
+
+
+        try:
+            connection.execute("delete from admin where theatre_name='"+gettheatrename+"'")
+            connection.commit()
+            print("Theatre Deleted Successfully.")
+            Flask("Deleted Successfully")
+        except Exception as e:
+            print(e)
+
+    return render_template("delete_theatre.html")
+
+@admin.route("/viewtheatre")
+def view_theatre():
+    cursor=connection.cursor()
+    count=cursor.execute("select * from admin")
+    result=cursor.fetchall()
+    return render_template("view_theatre.html",viewtheatre=result)
+
+@admin.route("/updatetheatre",methods = ["GET","POST"])
+def update_patient():
+    if request.method == "POST":
+        theatrename = request.form["theatrename"]
+        address = request.form["address"]
+        owner = request.form["owner"]
+        email = request.form["email"]
+        password = request.form["password"]
+        try:
+            query="update admin set theatre_name='"+theatrename+"',address='"+address+"',owner_name='"+owner+"',password='"+password+"' where email='"+email+"'"
+            print(query)
+            connection.execute(query)
+            connection.commit()
+            print("Updated Successfully")
+            return redirect("/viewtheatre")
+        except Exception as e:
+            print(e)
+
+    return render_template("update_theatre.html")
+
+@admin.route("/updatesearch",methods = ["GET","POST"])
+def update_search_theatre():
+    if request.method == "POST":
+        getemail=request.form["email"]
+        print(getemail)
+        cursor = connection.cursor()
+        count = cursor.execute("select * from admin where email='"+getemail+"'")
+        result = cursor.fetchall()
+        print(len(result))
+        return render_template("update_theatre.html", updatesearch=result)
+
+    return render_template("update_theatre.html")
+
 
 if __name__=="__main__":
     admin.run()
