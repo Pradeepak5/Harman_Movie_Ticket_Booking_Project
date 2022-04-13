@@ -95,7 +95,7 @@ def view_theatre():
     return render_template("view_theatre.html",viewtheatre=result)
 
 @admin.route("/updatetheatre",methods = ["GET","POST"])
-def update_patient():
+def update_Theatre():
     if request.method == "POST":
         theatrename = request.form["theatrename"]
         address = request.form["address"]
