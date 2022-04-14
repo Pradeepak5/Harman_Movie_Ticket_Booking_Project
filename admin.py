@@ -35,7 +35,8 @@ else:
                                show_time2 text,
                                show_time3 text,
                                show_time4 text,
-                               ticket_price text
+                               ticket_price integer,
+                               theatre_name text
                                )''')
     print("Theatre-1 Table created successfully")
 

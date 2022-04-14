@@ -1,44 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Theatre</title>
+    <title>View Movie</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-danger">
-        <a class="navbar-brand" href="/addtheatre">Add-Theatre</a>
+    <section class="bg-dark text-dark p-4 text-center">
+        <div class="container">
+            <center><h1> <span class="text-primary">
+                {% if session.name %}
+                {{session.name}} theatre
+                {% else %}
+                Not Yet Login
+                {% endif %}
+            </span>
+            </h1></center>
+        </div>
+    </section>
+    <nav class="navbar navbar-expand-lg p-2 navbar-light bg-primary">
+        <a class="navbar-brand" href="/addmovie"><h3>Add-Movie</h3></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/viewtheatre">View-Theatre</a>
+        <a class="navbar-brand" href="/viewmovie"><h3>View-Movie</h3></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/deletetheatre">Delete-Theatre</a>
+        <a class="navbar-brand" href="/deletemovie"><h3>Delete-Movie</h3></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/updatesearch">Update-Theatre</a>
+        <a class="navbar-brand" href="/updatemoviesearch"><h3>Update-Movie</h3></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/">Logout</a>
+        <a class="navbar-brand" href="/"><h3>Logout</h3></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
       </nav>
-    <section class="bg-dark text-dark p-4 text-center">
-        <div class="container">
-            <center><h1> <span class="text-light">
-                View All Theatre
-            </span>
-            </h1></center>
-
+    <br>
+    <div class="container bg-warning rounded">
+        <div class="row">
+            <div class="col">
+    <form action="/viewmovie" method="post">
+        <table class="table bg-warning rounded">
+        <tr>
+            <td><h4>Theatre Name</h4></td>
+            <td> <input type="text" name="theatrename" class="form-control"> </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><button type="submit" class="btn btn-success">Submit</button></td>
+        </tr>
+        </table>
+    </form>
+            </div>
         </div>
-    </section>
+    </div>
     <br>
     <div class="container">
         <div class="row">
@@ -46,21 +68,29 @@
                 <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">Theatre Name</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Owner Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Password</th>
+                        <th scope="col">Movie Name</th>
+                        <th scope="col">Language</th>
+                        <th scope="col">Release Date</th>
+                        <th scope="col">Seating Capacity</th>
+                        <th scope="col">1st Show</th>
+                        <th scope="col">2nd Show</th>
+                        <th scope="col">3rd Show</th>
+                        <th scope="col">4th Show</th>
+                        <th scope="col">Ticket Price</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {% for i in viewtheatre %}
+                      {% for i in viewallmovie %}
                       <tr>
+                          <td>{{i[0]}}</td>
                         <td>{{i[1]}}</td>
                         <td>{{i[2]}}</td>
                         <td>{{i[3]}}</td>
                         <td>{{i[4]}}</td>
                         <td>{{i[5]}}</td>
+                        <td>{{i[6]}}</td>
+                        <td>{{i[7]}}</td>
+                        <td>{{i[8]}}</td>
                       </tr>
                       {% endfor %}
                     </tbody>
@@ -68,6 +98,7 @@
             </div>
         </div>
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
