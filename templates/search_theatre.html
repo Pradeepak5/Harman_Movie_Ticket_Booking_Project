@@ -37,12 +37,30 @@
     <section class="bg-dark text-dark p-4 text-center">
         <div class="container">
             <center><h1> <span class="text-light">
-                View All Theatre
+                Search Theatre
             </span>
             </h1></center>
 
         </div>
     </section>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="/searchtheatre" method="post">
+                    <table class="table">
+                        <tr>
+                            <td>Theatre Name</td>
+                            <td> <input type="text" name="theatrename" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><button type="submit" class="btn btn-success">Search</button></td>
+                        </tr>
+                    </table>
+                </form>
+             </div>
+        </div>
+    </div>
     <br>
     <div class="container">
         <div class="row">
@@ -57,7 +75,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% for i in viewtheatre %}
+                      {% for i in searchtheatre %}
                       <tr>
                         <td>{{i[1]}}</td>
                         <td>{{i[2]}}</td>
