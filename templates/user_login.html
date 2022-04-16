@@ -5,40 +5,45 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin login </title>
+    <title>user login </title>
     <style>
+        *{
+            padding:0;
+            margin: 0;
+            box-sizing: border-box;
+        }
         body{
-            background-image: url('https://wallpapercave.com/wp/wp2411501.jpg');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100%;
+            background: rgba(219, 236, 236, 0.741);
         }
-        .container{
-            border: none;
-            padding: 50px 60px;
+        .row{
+            background: white;
+            border-radius: 30px;
         }
-        .btn{
+        img{
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+        }
+        .btn1{
             border: none;
             outline: none;
             height: 50px;
             width: 100%;
-            background-color:greenyellow;
-            color: black;
+            background-color: black;
+            color: white;
             border-radius: 4px;
         }
-        h1,p{
-            color: whitesmoke;
-        }
-        p{
-            font-size: 25px;
+        .btn1:hover{
+            background: white;
+            color: black;
+            border: 1px solid;
         }
     </style>
 </head>
 <body>
     <section class="bg-dark text-dark p-4 text-center">
-        <div class="container1">
+        <div class="container">
             <center><h1> <span class="text-light">
-                Admin Login Page
+                User Login Page
             </span>
             </h1></center>
 
@@ -48,21 +53,28 @@
     <br>
     <br>
     <div class="container">
-        <div class="row">
-            <div class="col">
-                <form action="/" method="post">
+        <div class="row no-gutters">
+            <div class="col-lg-5">
+                <img src="https://cdn1.vectorstock.com/i/1000x1000/07/30/juice-and-popcorn-for-movie-night-poster-vector-20220730.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-lg-7 pt-5">
+                <form action="/userlogin" method="post">
                     <table class="table">
                         <tr>
-                            <td><h1>Admin ID</h1></td>
-                            <td> <input type="text" name="adminname" class="form-control p-3"> </td>
+                            <td><h1>Email</h1></td>
+                            <td> <input type="text" name="email" class="form-control my-3 p-3"> </td>
                         </tr>
                         <tr>
                             <td><h1>Password</h1></td>
-                            <td> <input type="password" name="password" class="form-control p-3"> </td>
+                            <td> <input type="password" name="password" class="form-control my-3 p-3"> </td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><button class="btn btn-success">login</button></td>
+                            <td><button type="submit" class="btn1"><h4>Login</h4></button></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><p>New user?<a href="/userregistration">Click here</a> for registeration</p></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -70,7 +82,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><p>User?<a href="/userlogin">Click here</a> to login</p></td>
+                            <td><p>Admin?<a href="/">Click here</a> to login</p></td>
                         </tr>
                     </table>
                 </form>

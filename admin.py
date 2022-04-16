@@ -4,7 +4,6 @@ from flask_session import Session
 from werkzeug.utils import redirect
 
 
-
 connection=sql.connect("MovieTicketBooking.db",check_same_thread=False)
 
 listoftheatre=connection.execute("select name from sqlite_master where type='table' AND name='admin'").fetchall()
@@ -41,6 +40,22 @@ else:
                                theatre_name text
                                )''')
     print("Theatre-1 Table created successfully")
+
+
+listofuser = connection.execute("select name from sqlite_master where type='table' AND name='user'").fetchall()
+
+if listofuser!=[]:
+    print("Table exist already")
+else:
+    connection.execute('''create table user(
+                             ID integer primary key autoincrement,
+                             name text,
+                             address text,
+                             email text,
+                             phone integer,
+                             password text                                                      
+                             )''')
+    print("Table Created Successfully")
 
 admin=Flask(__name__)
 admin.config["SESSION_PERMANENT"] = False
@@ -252,6 +267,73 @@ def update_search_Movie():
         return render_template("owner_updatemovie.html", updatemovies=result)
 
     return render_template("owner_updatemovie.html")
+
+@admin.route("/userregistration",methods=["POST","GET"])
+def user_registration_details():
+    if request.method == "POST":
+        getname=request.form["name"]
+        getaddress=request.form["address"]
+        getemail=request.form["email"]
+        getphone=request.form["phone"]
+        getpassword=request.form["password"]
+        print(getemail)
+        print(getpassword)
+        try:
+            connection.execute("insert into user(name,address,email,phone,password)\
+                                   values('" + getname + "','" + getaddress + "','" + getemail + "'," + getphone + ",'" + getpassword + "')")
+            connection.commit()
+            print("User Data Added Successfully.")
+        except Exception as e:
+            print(e)
+
+        return redirect("/userlogin")
+
+    return render_template("user_registration.html")
+
+@admin.route("/userlogin",methods=["POST","GET"])
+def user_login():
+    global result
+    if request.method == "POST":
+        getemail = request.form["email"]
+        getpassword = request.form["password"]
+        cursor = connection.cursor()
+        query = "select * from user where email='"+getemail+"' and password='"+getpassword+"'"
+        print(query)
+        result = cursor.execute(query).fetchall()
+        if len(result) > 0:
+            for i in result:
+                getname=i[1]
+                getid=i[0]
+                session["name"]=getname
+                session["id"]=getid
+
+            return redirect("/userhome")
+    return render_template("user_login.html")
+
+@admin.route("/session")
+def user_session():
+    if not session.get("name"):
+        return redirect("/userlogin")
+    else:
+        return render_template("user_home.html")
+
+@admin.route("/userhome")
+def user_home():
+    cursor = connection.cursor()
+    count = cursor.execute("select theatre_name from admin")
+    result = cursor.fetchall()
+    return render_template("user_home.html", theatre=result)
+
+@admin.route("/searchmovie",methods=["POST","GET"])
+def user_search_movies():
+    if request.method == "POST":
+        getmoviename = request.form["moviename"]
+        cursor=connection.cursor()
+        count=cursor.execute("select theatre_name,seating_arrangement,show_time1,show_time2,show_time3,show_time4,ticket_price from theatre1 where movie_name like '%"+getmoviename+"%'")
+        result=cursor.fetchall()
+        return render_template("user_searchmovie.html",searchmovie=result)
+    return render_template("user_searchmovie.html")
+
 
 if __name__=="__main__":
     admin.run()
