@@ -73,6 +73,11 @@
                             <td><p>User?<a href="/userlogin">Click here</a> to login</p></td>
                         </tr>
                     </table>
+                    {% if status %}
+                    <br>
+                    <center><h2 style="color:greenyellow;">*Invalid ID or Password</h2></center>
+                    <br>
+                    {% endif %}
                 </form>
             </div>
         </div>

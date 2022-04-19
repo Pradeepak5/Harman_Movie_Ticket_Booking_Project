@@ -18,14 +18,14 @@
             outline: none;
             height: 40px;
             width: 100%;
-            background: #fb2525;
+            background: #ffc107;
             color: #fff;
             font-size: 18px;
             border-radius: 20px;
         }
         .btn:hover{
             cursor: pointer;
-            background: #ffc107;
+            background: #fb2525;
             color: #000;
         }
         h1,p{
@@ -97,6 +97,11 @@
                             <button class="btn btn-success">login</button>
                             <p>Admin?<a href="/">Click here</a> to login</p>
                             <p>User?<a href="/userlogin">Click here</a> to login</p>
+                    {% if status %}
+                    <br>
+                    <center><h2 style="color:yellow;">*Invalid ID or Password</h2></center>
+                    <br>
+                    {% endif %}
                         
                 </form>
                 </div>

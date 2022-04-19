@@ -85,6 +85,9 @@
                             <td><p>Admin?<a href="/">Click here</a> to login</p></td>
                         </tr>
                     </table>
+                    {% if status %}
+                    <center><h2 style="color:red;">*Invalid ID or Password</h2></center>
+                    {% endif %}
                 </form>
             </div>
         </div>

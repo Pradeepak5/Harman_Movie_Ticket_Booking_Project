@@ -6,25 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
+    <style>
+        h5{
+            padding : 10px ;
+        }
+        img{
+            width : 70% ;
+            height : 70% ;
+        }
+    </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-primary p-3">
       <a class="navbar-brand" href="/userhome"><h4>Home</h4></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-      <a class="navbar-brand" href="#"><h4>Movies</h4></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
       <a class="navbar-brand" href="/searchmovie"><h4>Search Movies</h4></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <a class="navbar-brand" href="/viewtickethistory"><h4>Tickets Booked</h4></a>
+      <a class="navbar-brand" href="/userupdate"><h4>Edit Profile</h4></a>
       <a class="navbar-brand" href="/userlogin"><h4>Logout</h4></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
   </nav>
     <section class="bg-dark text-dark p-3 text-center">
         <div class="container">
@@ -43,11 +41,11 @@
         <div class="row">
             {% for i in theatre %}
             <div class="col col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3 col-xxl-3">
-                <center><img src="https://i.pinimg.com/736x/c4/a0/a3/c4a0a319978240806bb1cd88cdcf75a3.jpg" style="width:50%; height:50%" ></center>
 
-                <div class="card rounded-pill" style="width: 18rem;">
+                <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                      <h5 class="card-title">Theatre Name: {{i[0]}}</h5>
+                        <center><img src="/static/images/{{i[0]}}" alt="" /></center>
+                      <h5 class="card-title">Theatre Name: {{i[1]}}</h5>
                     </div>
 
                   </div>

@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, render_template, session
 import sqlite3 as sql
 from flask_session import Session
@@ -14,6 +16,7 @@ else:
     connection.execute('''create table admin(
                                 ID integer primary key autoincrement,
                                 theatre_name text,
+                                theatre_pic BLOB,
                                 address text,
                                 owner_name text,
                                 email text,
@@ -57,10 +60,29 @@ else:
                              )''')
     print("Table Created Successfully")
 
+ticketbooking = connection.execute("select name from sqlite_master where type='table' AND name='ticketbooking'").fetchall()
+
+if ticketbooking!=[]:
+    print("Table exist already")
+else:
+    connection.execute('''create table ticketbooking(
+                             ID integer primary key autoincrement,
+                             theatre_name text,
+                             movie_name text,
+                             show_time text,
+                             ticket_count integer,
+                             show_date text,                             
+                             ticket_price integer,
+                             total_price integer,
+                             email text                                             
+                             )''')
+    print("Table Created Successfully")
+
 admin=Flask(__name__)
 admin.config["SESSION_PERMANENT"] = False
 admin.config["SESSION_TYPE"] = "filesystem"
 Session(admin)
+admin.config['UPLOAD_FOLDER'] = "static\images"
 
 @admin.route("/",methods=["POST","GET"])
 def admin_login():
@@ -71,23 +93,29 @@ def admin_login():
         print(getpassword)
         if getadminname == "admin" and getpassword == "12345":
             return redirect("/addtheatre")
-    return render_template("login.html")
+        return render_template("login.html",status=True)
+    return render_template("login.html",status=False)
 
 @admin.route("/addtheatre",methods=["POST","GET"])
 def add_theatre():
     if request.method=="POST":
-        gettheatrename=request.form["theatrename"]
-        getaddress=request.form["address"]
-        getowner=request.form["owner"]
-        getemail=request.form["email"]
-        getpassword=request.form["password"]
-        try:
-            connection.execute("insert into admin(theatre_name,address,owner_name,email,password)\
-                               values('"+gettheatrename+"','"+getaddress+"','"+getowner+"','"+getemail+"','"+getpassword+"')")
-            connection.commit()
-            print("Theatre added Successfully")
-        except Exception as e:
-            print(e)
+        theatreimage=request.files["image"]
+        if theatreimage != '':
+            filepath=os.path.join(admin.config['UPLOAD_FOLDER'],theatreimage.filename)
+            theatreimage.save(filepath)
+            gettheatrename=request.form["theatrename"]
+            getaddress=request.form["address"]
+            getowner=request.form["owner"]
+            getemail=request.form["email"]
+            getpassword=request.form["password"]
+            try:
+                cursor=connection.cursor()
+                cursor.execute("insert into admin(theatre_name,theatre_pic,address,owner_name,email,password)\
+                                   values('"+gettheatrename+"','"+theatreimage.filename+"','"+getaddress+"','"+getowner+"','"+getemail+"','"+getpassword+"')")
+                connection.commit()
+                print("Theatre added Successfully")
+            except Exception as e:
+                print(e)
 
     return render_template("add_theatre.html")
 
@@ -102,7 +130,6 @@ def delete_theatre():
             connection.execute("delete from admin where theatre_name='"+gettheatrename+"'")
             connection.commit()
             print("Theatre Deleted Successfully.")
-            Flask("Deleted Successfully")
         except Exception as e:
             print(e)
 
@@ -174,7 +201,8 @@ def owner_login():
                 session["name"]=getname
                 session["id"]=getid
             return redirect("/ownerpage")
-    return render_template("owner_login.html")
+        return render_template("owner_login.html",status=True)
+    return render_template("owner_login.html",status=False)
 
 @admin.route("/ownerpage")
 def owner_session():
@@ -308,7 +336,8 @@ def user_login():
                 session["id"]=getid
 
             return redirect("/userhome")
-    return render_template("user_login.html")
+        return render_template("user_login.html",status=True)
+    return render_template("user_login.html",status=False)
 
 @admin.route("/session")
 def user_session():
@@ -320,7 +349,7 @@ def user_session():
 @admin.route("/userhome")
 def user_home():
     cursor = connection.cursor()
-    count = cursor.execute("select theatre_name from admin")
+    count = cursor.execute("select theatre_pic,theatre_name from admin")
     result = cursor.fetchall()
     return render_template("user_home.html", theatre=result)
 
@@ -329,10 +358,102 @@ def user_search_movies():
     if request.method == "POST":
         getmoviename = request.form["moviename"]
         cursor=connection.cursor()
-        count=cursor.execute("select theatre_name,seating_arrangement,show_time1,show_time2,show_time3,show_time4,ticket_price from theatre1 where movie_name like '%"+getmoviename+"%'")
+        count=cursor.execute("select ID,theatre_name,seating_arrangement,ticket_price from theatre1 where movie_name like '%"+getmoviename+"%'")
         result=cursor.fetchall()
         return render_template("user_searchmovie.html",searchmovie=result)
     return render_template("user_searchmovie.html")
+
+@admin.route("/userupdate",methods=["GET","POST"])
+def edit_profile():
+    if request.method == "POST":
+        getemail = request.form["email"]
+        getname = request.form["name"]
+        getaddress = request.form["address"]
+        getphone = request.form["phone"]
+        getpassword = request.form["password"]
+        try:
+            query="update user set name='"+getname+"',address='"+getaddress+"',phone="+getphone+",password='"+getpassword+"'  where email='"+getemail+"'"
+            print(query)
+            connection.execute(query)
+            connection.commit()
+            print("Updated Successfully")
+        except Exception as e:
+            print(e)
+
+    return render_template("user_update.html")
+
+@admin.route("/userupdatesearch",methods = ["GET","POST"])
+def update_search_patient():
+    if request.method == "POST":
+        getemail=request.form["email"]
+        print(getemail)
+        cursor = connection.cursor()
+        count = cursor.execute("select * from user where email='"+getemail+"'")
+        result = cursor.fetchall()
+        print(len(result))
+        return render_template("user_update.html", userupdate=result)
+
+    return render_template("user_update.html")
+
+@admin.route("/bookmyshow")
+def BookMyShow():
+        getid = request.args.get('id')
+        cursor=connection.cursor()
+        count=cursor.execute("select theatre_name,movie_name,seating_arrangement,show_time1,show_time2,show_time3,show_time4,ticket_price,ID from theatre1 where ID="+getid)
+        result=cursor.fetchall()
+        return render_template("user_bookmyshow.html",searchmovie=result)
+
+@admin.route("/popupbookmyshow",methods=["POST","GET"])
+def popup_bookmyshow():
+    if request.method == "POST":
+        gettheatrename=request.form["theatrename"]
+        getmoviename=request.form["moviename"]
+        getshowtime=request.form["showtime"]
+        getticketcount=request.form["ticketcount"]
+        getintcount=int(getticketcount)
+        getshowdate=request.form["showdate"]
+        getticketprice=request.form["ticketprice"]
+        getprice=int(getticketprice)
+        getemail=request.form["email"]
+        gettotalprice=((getprice)*(getintcount))
+        totalprice=str(gettotalprice)
+        print(totalprice)
+        print(getshowtime)
+        print(getticketcount)
+        print(getshowdate)
+        try:
+            connection.execute("insert into ticketbooking(theatre_name,movie_name,show_time,ticket_count,show_date,ticket_price,email,total_price)\
+                                       values('" + gettheatrename + "','"+getmoviename+"','"+getshowtime+"',"+getticketcount+",'"+getshowdate+"',"+getticketprice+",'"+getemail+"',"+totalprice+")")
+            connection.commit()
+            print("Ticket Booked Successfully.")
+            return redirect("/userpayment")
+        except Exception as e:
+            print(e)
+
+    return render_template("user_bookmyshow.html")
+
+@admin.route("/viewtickethistory",methods=["POST","GET"])
+def view_ticket_booking_history():
+    if request.method == "POST":
+        getemail=request.form["email"]
+        cursor=connection.cursor()
+        count=cursor.execute("select * from ticketbooking where email='"+getemail+"'")
+        result1=cursor.fetchall()
+        return render_template("view_tickethistory.html",viewhistory=result1)
+    return render_template("view_tickethistory.html")
+
+@admin.route("/userpayment")
+def payment():
+    return render_template("user_payment.html")
+
+@admin.route("/cancelticket")
+def cancel_ticket():
+    getid = request.args.get('id')
+    cursor = connection.cursor()
+    count = cursor.execute("delete from ticketbooking where ID="+getid+"")
+    connection.commit()
+    print("Ticket Cancelled")
+    return render_template("view_tickethistory.html")
 
 
 if __name__=="__main__":
