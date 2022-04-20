@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Theatre</title>
+    <title>Revenue</title>
     <style>
         h4:hover{
             color: antiquewhite;
@@ -25,7 +25,7 @@
     <section class="bg-dark text-dark p-4 text-center">
         <div class="container">
             <center><h1> <span class="text-light">
-                Add Theatre Page
+                Revenue
             </span>
             </h1></center>
 
@@ -34,38 +34,41 @@
     <div class="container bg-light">
         <div class="row">
             <div class="col">
-                <form action="/addtheatre" method="post" enctype="multipart/form-data">
+                <form action="/revenue" method="post">
                     <table class="table">
                         <tr>
                             <td>Theatre Name</td>
-                            <td> <input type="text" name="theatrename" class="form-control"> </td>
-                        </tr>
-                        <tr>
-                            <td>Theatre Image</td>
-                            <td> <input type="file" name="image" class="form-control"> </td>
-                        </tr>
-                        <tr>
-                            <td>Address</td>
-                            <td> <input type="text" name="address" class="form-control"> </td>
-                        </tr>
-                        <tr>
-                            <td>Owner Name</td>
-                            <td> <input type="text" name="owner" class="form-control"> </td>
-                        </tr>
-                        <tr>
-                            <td>Email</td>
-                            <td> <input type="email" name="email" class="form-control"> </td>
-                        </tr>
-                        <tr>
-                            <td>Password</td>
-                            <td> <input type="password" name="password" class="form-control"> </td>
+                            <td> <input type="text" name="theatrename" class="form-control"></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><button type="submit" class="btn btn-success">Add</button></td>
+                            <td><button type="submit" class="btn btn-primary">View Revenue</button></td>
                         </tr>
                     </table>
                 </form>
+             </div>
+        </div>
+    </div>
+    <br>
+    <div class="container bg-light">
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Theatre Name</th>
+                        <th scope="col">Total Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in revenue %}
+                      <tr>
+                        <td>{{i[0]}}</td>
+                        <td>&#8377 {{i[1]}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
             </div>
         </div>
     </div>

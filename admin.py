@@ -185,6 +185,17 @@ def update_search_theatre():
 
     return render_template("update_theatre.html")
 
+@admin.route("/revenue",methods=["POST","GET"])
+def view_revenue():
+    if request.method == "POST":
+        gettheatrename=request.form["theatrename"]
+        cursor=connection.cursor()
+        count=cursor.execute("select theatre_name,sum(total_price) as total_price from ticketbooking where theatre_name='"+gettheatrename+"'")
+        result1=cursor.fetchall()
+        return render_template("revenue.html",revenue=result1)
+    return render_template("revenue.html")
+
+
 @admin.route("/ownerlogin",methods=["POST","GET"])
 def owner_login():
     if request.method == "POST":
@@ -399,7 +410,7 @@ def update_search_patient():
 def BookMyShow():
         getid = request.args.get('id')
         cursor=connection.cursor()
-        count=cursor.execute("select theatre_name,movie_name,seating_arrangement,show_time1,show_time2,show_time3,show_time4,ticket_price,ID from theatre1 where ID="+getid)
+        count=cursor.execute("select theatre_name,movie_name,seating_arrangement,show_time1,show_time2,show_time3,show_time4,ticket_price from theatre1 where ID="+getid)
         result=cursor.fetchall()
         return render_template("user_bookmyshow.html",searchmovie=result)
 
@@ -446,11 +457,12 @@ def view_ticket_booking_history():
 def payment():
     return render_template("user_payment.html")
 
+
 @admin.route("/cancelticket")
 def cancel_ticket():
     getid = request.args.get('id')
     cursor = connection.cursor()
-    count = cursor.execute("delete from ticketbooking where ID="+getid+"")
+    count = cursor.execute("delete from ticketbooking where ID='"+getid+"'")
     connection.commit()
     print("Ticket Cancelled")
     return render_template("view_tickethistory.html")
