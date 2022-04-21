@@ -1,13 +1,5 @@
 from flask import Flask, request, render_template
 import sqlite3 as sql
-# test
-
-
-
-
-
-
-
 from werkzeug.utils import redirect
 
 connection=sql.connect("MovieTicketBooking.db",check_same_thread=False)
