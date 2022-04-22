@@ -437,7 +437,6 @@ def popup_bookmyshow():
                                        values('" + gettheatrename + "','"+getmoviename+"','"+getshowtime+"',"+getticketcount+",'"+getshowdate+"',"+getticketprice+",'"+getemail+"',"+totalprice+")")
             connection.commit()
             print("Ticket Booked Successfully.")
-            return redirect("/userpayment")
         except Exception as e:
             print(e)
 
